@@ -1,0 +1,85 @@
+Phase 1 — Config Server
+
+ Add dependencies: spring-cloud-config-server
+ Annotate main class with @EnableConfigServer
+ Set server.port=8888 in application.properties
+ Choose config storage: local filesystem (simplest to start)
+ Set spring.cloud.config.server.native.search-locations=classpath:/configs
+ Set spring.profiles.active=native
+ Create folder src/main/resources/configs/
+ Inside that folder, create user-service.properties (put server.port=8081 in it for now)
+ Run Config Server, hit http://localhost:8888/user-service/default — you should see JSON back
+ ✅ Config Server is working
+
+
+Phase 2 — Service Discovery (Eureka)
+
+ Add dependencies: spring-cloud-starter-netflix-eureka-server
+ Annotate main class with @EnableEurekaServer
+ Set server.port=8761
+ Add these in application.properties:
+
+  eureka.client.register-with-eureka=false
+  eureka.client.fetch-registry=false
+
+ Run it, open http://localhost:8761 — Eureka dashboard should load
+ Now go to User Service and make it register with Eureka:
+
+Add dependency: spring-cloud-starter-netflix-eureka-client
+Add spring.application.name=user-service
+Add eureka.client.service-url.defaultZone=http://localhost:8761/eureka
+
+
+ Run User Service, refresh Eureka dashboard — USER-SERVICE should appear in the list
+ ✅ Service Discovery is working
+
+
+Phase 3 — Config Server Integration (User Service reads from Config Server)
+
+ In User Service, add dependency: spring-cloud-starter-config
+ Rename application.properties → bootstrap.properties (or use spring.config.import if Spring Boot 2.4+)
+ Add these in User Service config file:
+
+  spring.application.name=user-service
+  spring.cloud.config.uri=http://localhost:8888
+
+ Remove hardcoded server.port from User Service — it should now come from Config Server's user-service.properties
+ Restart Config Server first, then User Service
+ Confirm User Service starts on port 8081 (pulled from Config Server)
+ ✅ User Service is reading config from Config Server
+
+
+Phase 4 — API Gateway
+
+ Add dependencies: spring-cloud-starter-gateway, spring-cloud-starter-netflix-eureka-client
+ Set server.port=8080
+ Set spring.application.name=api-gateway
+ Register Gateway with Eureka (same config as User Service above)
+ Add route for User Service in application.yml:
+
+yaml  spring:
+    cloud:
+      gateway:
+        routes:
+          - id: user-service
+            uri: lb://user-service
+            predicates:
+              - Path=/api/users/**
+
+ lb:// means load-balanced — Gateway asks Eureka for the address automatically
+ Start everything in this order: Config → Eureka → User Service → Gateway
+ Hit http://localhost:8080/api/users/health — should reach your User Service controller
+ ✅ API Gateway routing is working
+
+
+Startup Order (always follow this)
+1. Config Server    (8888)
+2. Eureka           (8761)
+3. User Service     (8081)
+4. API Gateway      (8080)
+
+When You Get Stuck
+Most common failures and where to look:
+SymptomLikely causeUser Service won't startConfig Server not running yetService not showing in EurekaMissing eureka.client.service-url.defaultZoneGateway returns 503Service not registered in Eureka yet, wait 30sConfig not loadingWrong spring.application.name — must match filename in /configs/bootstrap.properties ignoredMissing spring-cloud-starter-bootstrap dependency
+
+That's everything. Work through it top to bottom and only come back here if something in the error logs makes no sense. Good luck.
