@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/healthcheck")
+@RequestMapping("/api/users")
 public class healthcheck {
 
-     @GetMapping("/")
+     @GetMapping("/health")
     public String sendRespond(){
           return "OK";
      }
