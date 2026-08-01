@@ -6,9 +6,10 @@ import com.trello.taskmanager.userservice.entity.UserEntity;
 import com.trello.taskmanager.userservice.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 @Service
@@ -17,13 +18,19 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public boolean saveUser(RegistrationRequestDTO user){
 
         UserEntity userEntity= new UserEntity();
         userEntity.setName(user.getName());
         userEntity.setEmail(user.getEmail());
         userEntity.setContact(user.getContact());
-        userEntity.setPassword(user.getPassword());
+
+        String encryptedPassword= passwordEncoder.encode(user.getPassword());
+
+        userEntity.setPassword(encryptedPassword);
         UserEntity result=userRepository.save(userEntity);
         if(result.getUserId() == null) {
             log.info("Registration Failed: Database failed to generate ID");
