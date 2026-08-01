@@ -16,11 +16,14 @@ public class UserEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name= "email", nullable = false)
+    @Column(name= "email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "contact", nullable = false)
     private Long contact;
+
+    @Column(name= "Password", nullable = false)
+    private String password;
 
     @Override
     public String toString(){
