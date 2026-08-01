@@ -1,5 +1,6 @@
 package com.trello.taskmanager.userservice.globalExceptionHandling;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +28,24 @@ public class GlobalExceptionHandler {
            );
 
            return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+       }
+
+       @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleEntityNotFoundException(EntityNotFoundException ex){
+
+           String errorMessage= "User not found with provided id";
+
+           String rootMessage= ex.getCause() != null ? ex.getCause().getMessage() : "";
+
+           if(rootMessage.contains("entity") || rootMessage.toLowerCase().contains("no row with given identifier exists for entity")){
+               errorMessage= "Fetch failed: Failed to fetch user with given id";
+           }
+
+           ErrorResponse error= new ErrorResponse(
+                   HttpStatus.EXPECTATION_FAILED.value(),
+                   errorMessage,
+                   LocalDateTime.now()
+           );
+           return new ResponseEntity<>(error, HttpStatus.OK);
        }
 }
