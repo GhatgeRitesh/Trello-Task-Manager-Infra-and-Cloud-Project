@@ -43,7 +43,7 @@ public class UserService {
         UserEntity user= userRepository.getById(userId);
 
         if(user == null){
-            log.info("Failed to pull User Details");
+            log.info("Failed to fetch user details with id"+ userId);
             return null;
         }
 

@@ -20,7 +20,7 @@ public class UserController {
 
 
     // 1. Register User Deatails
-    @PostMapping("/new-registration")
+    @PostMapping("/auth/new-registration")
     public ResponseEntity<?> registerNewUser(@Validated  @RequestBody RegistrationRequestDTO user){
         log.info("New user registration process started");
         log.info("User Details: ", user.toString());
