@@ -29,6 +29,8 @@ spring:
               uri: lb://identity-service
               predicates:
                 - Path=/api/users/**
+              filters:
+                - AuthenticationFilter
 
 management:
   endpoint:
