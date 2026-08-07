@@ -69,4 +69,8 @@ public class UserService {
                  ))
                 .toList();
     }
+
+    public void deleteUserById(Long id){
+        userRepository.deleteById(id);
+    }
 }

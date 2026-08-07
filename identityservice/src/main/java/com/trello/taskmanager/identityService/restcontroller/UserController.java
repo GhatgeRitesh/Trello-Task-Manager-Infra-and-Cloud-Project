@@ -43,8 +43,14 @@ public class UserController {
           return new ResponseEntity<>(responseDTO,HttpStatus.OK);
     }
 
+    @GetMapping("/deleteUser/{user_id}")
+    public ResponseEntity<?> deleteUserById(@PathVariable("user_id") Long id){
+        userService.deleteUserById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
     @GetMapping("/getAllUsers")
-    public ResponseEntity<?> getAllUsers(){
+    public ResponseEntity<?> getAllUsers() {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
+
 }

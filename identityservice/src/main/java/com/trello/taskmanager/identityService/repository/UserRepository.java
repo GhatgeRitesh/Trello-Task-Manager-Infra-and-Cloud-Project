@@ -13,4 +13,7 @@ import java.util.Optional;
 public interface  UserRepository extends JpaRepository<UserEntity, Long> {
     @Query(" Select u from UserEntity u where u.name = :username")
     Optional<UserEntity> findByName(@Param("username") String Username);
+
+    @Query("delete  from UserEntity u where u.userId = :userId")
+    void deleteById(@Param("userId") Long id);
 }
