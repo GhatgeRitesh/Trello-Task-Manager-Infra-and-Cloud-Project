@@ -1,12 +1,17 @@
 package com.trello.taskmanager.identityService.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "UserDetails")
-@Getter @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Data
 public class UserEntity {
 
     @Id
@@ -25,9 +30,15 @@ public class UserEntity {
     @Column(name= "Password", nullable = false)
     private String password;
 
+    // --- NEW: Added roles collection ---
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    private List<String> roles = new ArrayList<>();
+
     @Override
     public String toString(){
-        return "{\n User Account Details: Name:"+ name +"\n EmailId: "+email+"\n contact: "+contact+"\n }";
+        return "{\n User Account Details: Name:"+ name +"\n EmailId: "+email+"\n contact: "+contact+"\n Roles: "+roles+"\n }";
     }
 
 }

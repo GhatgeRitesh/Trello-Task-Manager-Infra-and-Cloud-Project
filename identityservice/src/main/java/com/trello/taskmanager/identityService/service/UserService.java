@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 @Log4j2
 public class UserService {
@@ -27,6 +29,7 @@ public class UserService {
         userEntity.setName(user.getName());
         userEntity.setEmail(user.getEmail());
         userEntity.setContact(user.getContact());
+        userEntity.setRoles(List.of("ROLE_USER"));
 
         String encryptedPassword= passwordEncoder.encode(user.getPassword());
 
@@ -53,6 +56,7 @@ public class UserService {
         responseDTO.setName(user.getName());
         responseDTO.setEmail(user.getEmail());
         responseDTO.setContact(user.getContact());
+        responseDTO.setRole(user.getRoles());
 
         return responseDTO;
     }
@@ -61,12 +65,14 @@ public class UserService {
         List<UserEntity> userEntities= userRepository.findAll();
 
         return userEntities.stream()
-                .map(entity -> new UserResponseDTO(
-                        entity.getUserId(),
-                        entity.getName(),
-                        entity.getEmail(),
-                        entity.getContact()
-                 ))
+                .map(entity -> UserResponseDTO.builder()
+                        .userId(entity.getUserId())
+                        .name(entity.getName())
+                        .email(entity.getEmail())
+                        .contact(entity.getContact())
+                        .role(entity.getRoles())
+                        .build()
+                 )
                 .toList();
     }
 

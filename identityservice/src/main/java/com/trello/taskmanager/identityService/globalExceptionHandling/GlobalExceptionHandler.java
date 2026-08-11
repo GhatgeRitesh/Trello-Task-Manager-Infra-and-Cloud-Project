@@ -1,5 +1,6 @@
 package com.trello.taskmanager.identityService.globalExceptionHandling;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -66,5 +67,22 @@ public class GlobalExceptionHandler {
                    LocalDateTime.now()
            );
            return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
+       }
+
+       @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ErrorResponse> JwtTokenExpiredException(JwtException ex){
+           String errorMessage= "";
+           String rootMessage= ex.getCause() != null ? ex.getCause().getMessage() : "JWT token Exception";
+
+           if(rootMessage.contains(" JWT expired")){
+               errorMessage=rootMessage;
+           }
+
+           ErrorResponse error= new ErrorResponse(
+                   HttpStatus.BAD_REQUEST.value(),
+                   errorMessage,
+                   LocalDateTime.now()
+           );
+           return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
        }
 }

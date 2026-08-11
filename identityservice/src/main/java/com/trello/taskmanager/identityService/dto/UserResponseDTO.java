@@ -2,9 +2,12 @@ package com.trello.taskmanager.identityService.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserResponseDTO {
 
 
@@ -13,8 +16,7 @@ public class UserResponseDTO {
     private String name;
     private String email;
     private Long contact;
-
-
+    private List<String> role;
 
 }
 

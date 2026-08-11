@@ -28,6 +28,12 @@ spring:
             - id: identity-service
               uri: lb://identity-service
               predicates:
+                - Path=/api/user/auth/**
+
+
+            - id: identity-service
+              uri: lb://identity-service
+              predicates:
                 - Path=/api/users/**
               filters:
                 - AuthenticationFilter
