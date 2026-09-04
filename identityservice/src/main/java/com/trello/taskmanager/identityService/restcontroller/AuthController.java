@@ -2,6 +2,7 @@ package com.trello.taskmanager.identityService.restcontroller;
 
 import com.trello.taskmanager.identityService.dto.AuthRequest;
 
+import com.trello.taskmanager.identityService.entity.CustomUserDetails;
 import com.trello.taskmanager.identityService.service.JwtService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +41,16 @@ public class AuthController {
                  );
 
        if(auth.isAuthenticated()) {
+
+           CustomUserDetails userDetails= (CustomUserDetails) auth.getPrincipal();
+
+           Long userId= userDetails.getUserId();
            List<String> roles = auth.getAuthorities().stream()
                    .map(GrantedAuthority::getAuthority)
                    .collect(Collectors.toList());
 
-           String token = jwtService.generateToken(authRequest.getUsername(), roles);
+
+           String token = jwtService.generateToken(authRequest.getUsername(), roles,userId);
            return ResponseEntity.ok(Map.of("token", token));
        }
        return new ResponseEntity<>("Invalid credentials",HttpStatus.UNAUTHORIZED);

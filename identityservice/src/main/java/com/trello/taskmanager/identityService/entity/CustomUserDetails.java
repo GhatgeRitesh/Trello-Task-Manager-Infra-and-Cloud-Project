@@ -13,11 +13,13 @@ import java.util.stream.Collectors;
 public class CustomUserDetails implements UserDetails {
     private final String username;
     private final String password;
+    private final Long userId;
     private final Collection<? extends  GrantedAuthority> authorities;
 
     public CustomUserDetails(UserEntity user){
         this.username= user.getName();
         this.password= user.getPassword();
+        this.userId= user.getUserId();
         this.authorities=user.getRoles().stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
@@ -35,6 +37,9 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername(){return username;}
+
+
+    public Long getUserId(){return userId;}
 
     @Override
     public boolean isAccountNonExpired() { return true; }

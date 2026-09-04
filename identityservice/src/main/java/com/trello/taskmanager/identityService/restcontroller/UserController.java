@@ -22,8 +22,6 @@ public class UserController {
     // 1. Register User Deatails
     @PostMapping("/auth/new-registration")
     public ResponseEntity<?> registerNewUser(@Validated  @RequestBody RegistrationRequestDTO user){
-        log.info("New user registration process started");
-        log.info("User Details: ", user.toString());
         Boolean flag= userService.saveUser(user);
         if(! flag){
             return new ResponseEntity<>(user,HttpStatus.EXPECTATION_FAILED);

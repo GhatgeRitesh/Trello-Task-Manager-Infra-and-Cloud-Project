@@ -20,10 +20,11 @@ public class JwtService{
 
     private static final long EXPIRATION_MS = 1000 * 60 * 60 * 24; // 24 hours
 
-    public String generateToken(String username, List<String> roles){
+    public String generateToken(String username, List<String> roles,Long userId){
         return Jwts.builder()
                 .subject(username)
                 .claim("roles",roles)
+                .claim("userId",userId)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
                 .signWith(getSigningKey())
