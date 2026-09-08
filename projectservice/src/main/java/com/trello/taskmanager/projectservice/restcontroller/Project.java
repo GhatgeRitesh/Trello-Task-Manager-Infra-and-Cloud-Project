@@ -11,7 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/project-service/new-project")
+@RequestMapping("/api/project-service/")
 public class Project {
 
 //    1. add new project and project members
