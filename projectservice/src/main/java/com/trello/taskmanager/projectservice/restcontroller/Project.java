@@ -24,6 +24,7 @@ public class Project {
     @PostMapping("/createNewProject")
     public ResponseEntity<?> createNewProject(@Validated @RequestBody ProjectDTO projectDTO){
 
+        projectService.createproject(projectDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

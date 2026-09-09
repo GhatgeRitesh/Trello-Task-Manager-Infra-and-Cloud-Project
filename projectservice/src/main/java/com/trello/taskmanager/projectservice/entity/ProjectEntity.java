@@ -2,6 +2,7 @@ package com.trello.taskmanager.projectservice.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 public class ProjectEntity {
 
     @Id
@@ -37,6 +39,6 @@ public class ProjectEntity {
     private Set<Long> memberIDs = new HashSet<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WorkEntity> works=  new ArrayList<>();
+    private List<TaskEntity> tasks=  new ArrayList<>();
 
 }
